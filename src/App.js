@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { v4 as id } from "uuid";
-import ContactForm from "./components/ContactForm/ContactForm";
-import Filter from "./components/Filter/Filter.js";
-import ContactList from "./components/ContactList/ContactList";
+import ContactForm from "./components/ContactForm";
+import Filter from "./components/Filter";
+import ContactList from "./components/ContactList";
 import "./App.css";
 
 id();
@@ -12,6 +12,20 @@ class App extends Component {
     contacts: [],
     filter: "",
   };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem("contacts");
+    const parsedContacts = JSON.parse(contacts);
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+    }
+  }
 
   // перезаписывает массив контактов и
   // запрещает сохранить уже существующий контакт
@@ -59,19 +73,6 @@ class App extends Component {
     );
   };
 
-  componentDidMount() {
-    const contacts = localStorage.getItem("contacts");
-    const parsedContacts = JSON.parse(contacts);
-    if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
-    }
-  }
   render() {
     const { filter } = this.state;
     const {
